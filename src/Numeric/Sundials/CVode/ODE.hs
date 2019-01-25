@@ -119,8 +119,8 @@ C.include "<sunlinsol/sunlinsol_dense.h>" -- access to dense SUNLinearSolver
 C.include "<cvode/cvode_direct.h>"        -- access to CVDls interface
 C.include "<sundials/sundials_types.h>"   -- definition of type realtype
 C.include "<sundials/sundials_math.h>"
-C.include "../../../helpers.h"
-C.include "Numeric/Sundials/Arkode_hsc.h"
+C.include "src/helpers.h"
+C.include "src/Numeric/Sundials/Arkode_hsc.h"
 
 
 -- | The direction in which a function should cross the x axis
@@ -400,7 +400,7 @@ solveOdeC maxErrTestFails maxNumSteps_ minStep_ method initStepSize
                             output_ind, but the inline-c expression is quite verbose, and output_ind is
                             more convenient to use in index calculations.
                          */
-			 ($vec-ptr:(int *n_rows_mut))[0] = output_ind;
+                         ($vec-ptr:(int *n_rows_mut))[0] = output_ind;
                          /* event_ind tracks the current event number */
                          int event_ind = 0;
 
@@ -476,7 +476,7 @@ solveOdeC maxErrTestFails maxNumSteps_ minStep_ method initStepSize
                          }
 
                          /* Store initial conditions */
-			 ($vec-ptr:(double *output_mat_mut))[0 * (NEQ + 1) + 0] = ($vec-ptr:(double *ts))[0];
+                         ($vec-ptr:(double *output_mat_mut))[0 * (NEQ + 1) + 0] = ($vec-ptr:(double *ts))[0];
                          for (j = 0; j < NEQ; j++) {
                            ($vec-ptr:(double *output_mat_mut))[0 * (NEQ + 1) + (j + 1)] = NV_Ith_S(y,j);
                          }
@@ -486,7 +486,7 @@ solveOdeC maxErrTestFails maxNumSteps_ minStep_ method initStepSize
                            if (check_flag(&flag, "CVode solver failure, stopping integration", 1)) return 1;
 
                            /* Store the results for Haskell */
-			   ($vec-ptr:(double *output_mat_mut))[output_ind * (NEQ + 1) + 0] = t;
+                           ($vec-ptr:(double *output_mat_mut))[output_ind * (NEQ + 1) + 0] = t;
                            for (j = 0; j < NEQ; j++) {
                              ($vec-ptr:(double *output_mat_mut))[output_ind * (NEQ + 1) + (j + 1)] = NV_Ith_S(y,j);
                            }
@@ -503,8 +503,8 @@ solveOdeC maxErrTestFails maxNumSteps_ minStep_ method initStepSize
                                 If not, continue without any observable side-effects.
                              */
                              int good_event = 0;
-			     flag = CVodeGetRootInfo(cvode_mem, ($vec-ptr:(int *gResMut)));
-			     if (check_flag(&flag, "CVodeGetRootInfo", 1)) return 1;
+                             flag = CVodeGetRootInfo(cvode_mem, ($vec-ptr:(int *gResMut)));
+                             if (check_flag(&flag, "CVodeGetRootInfo", 1)) return 1;
                              for (i = 0; i < $(int nr); i++) {
                                int ev = ($vec-ptr:(int *gResMut))[i];
                                int req_dir = ($vec-ptr:(const int *requested_event_directions))[i];
@@ -537,14 +537,14 @@ solveOdeC maxErrTestFails maxNumSteps_ minStep_ method initStepSize
                                ($vec-ptr:(int *n_rows_mut))[0] = output_ind;
                              }
                            }
-			   else {
-			     if (++input_ind >= $(int nTs))
+                           else {
+                             if (++input_ind >= $(int nTs))
                                break;
-			   }
+                           }
                          }
 
-			 /* The number of actual roots we found */
-			 ($vec-ptr:(int *n_events_mut))[0] = event_ind;
+                         /* The number of actual roots we found */
+                         ($vec-ptr:(int *n_events_mut))[0] = event_ind;
 
                          /* Get some final statistics on how the solve progressed */
                          flag = CVodeGetNumSteps(cvode_mem, &nst);

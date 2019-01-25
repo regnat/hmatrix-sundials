@@ -229,8 +229,8 @@ C.include "<sunlinsol/sunlinsol_dense.h>"     -- access to dense SUNLinearSolver
 C.include "<arkode/arkode_direct.h>"          -- access to ARKDls interface
 C.include "<sundials/sundials_types.h>"       -- definition of type realtype
 C.include "<sundials/sundials_math.h>"
-C.include "../../../helpers.h"
-C.include "Numeric/Sundials/Arkode_hsc.h"
+C.include "src/helpers.h"
+C.include "src/Numeric/Sundials/Arkode_hsc.h"
 
 
 -- | Stepping functions
